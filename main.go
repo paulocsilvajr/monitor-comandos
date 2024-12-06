@@ -4,35 +4,56 @@ import (
 	"fmt"
 	"net/http"
 	"os/exec"
+	"syscall"
 
 	"github.com/gin-gonic/gin"
 )
 
-func executa(comando string, argumentos ...string) string {
+func executa(comando string, argumentos ...string) (stdout string, stderr string, exitCode int) {
 	cmd := exec.Command(comando, argumentos...)
-	stdout, err := cmd.Output()
+	combinedOutput, err := cmd.CombinedOutput()
 	if err != nil {
-		return ""
+		if exiterr, ok := err.(*exec.ExitError); ok {
+			if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
+				return string(combinedOutput), err.Error(), status.ExitStatus()
+			}
+		}
+		return "", err.Error(), -1
 	}
-	return string(stdout)
+	return string(combinedOutput), "", 0
 }
 
-func executa_ls() string {
+func executa_ls() (string, string, int) {
 	return executa("ls", "/home/paulo")
 }
 
-func executa_whoami() string {
+func executa_whoami() (string, string, int) {
 	return executa("whoami")
+}
+
+func executa_naoexiste() (string, string, int) {
+	return executa("naoexiste")
+}
+
+func executa_ls2() (string, string, int) {
+	return executa("ls", "2")
+}
+
+func execute_catwords() (string, string, int) {
+	return executa("cat", "/etc/dictionaries-common/words")
 }
 
 type Rota struct {
 	nome   string
-	funcao func() string
+	funcao func() (string, string, int)
 }
 
 var rotas = []Rota{
 	{"whoami", executa_whoami},
 	{"ls", executa_ls},
+	{"naoexiste", executa_naoexiste},
+	{"ls2", executa_ls2},
+	{"catwords", execute_catwords},
 }
 
 func main() {
@@ -43,15 +64,19 @@ func main() {
 		rotaLocal := rota
 		r.GET(rotaLocal.nome, func(c *gin.Context) {
 			fmt.Println("Executado:", rotaLocal)
-			retorno := rotaLocal.funcao()
+			stdout, err, exitCode := rotaLocal.funcao()
 
 			status := http.StatusOK
-			if len(retorno) == 0 {
+			if exitCode != 0 {
 				status = http.StatusInternalServerError
 			}
 
 			c.JSON(status, gin.H{
-				rotaLocal.nome: retorno,
+				rotaLocal.nome: map[string]any{
+					"stdout":    stdout,
+					"err":       err,
+					"exit-code": exitCode,
+				},
 			})
 		})
 	}
