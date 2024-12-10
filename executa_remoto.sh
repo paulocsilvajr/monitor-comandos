@@ -6,4 +6,4 @@ jq --version > /dev/null && curl --version > /dev/null ||
 resultado=$(curl -s localhost:8080/"$1")
 
 grep "404 page not found" <(echo "$resultado") ||
-    echo "$resultado" | jq --raw-output ."$1"
+    echo "$resultado" | jq --raw-output
