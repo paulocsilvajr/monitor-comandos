@@ -8,10 +8,10 @@ type rota struct {
 	Funcao  func(string, ...string) (string, string, int)
 }
 
-func RetornaRotas(comandos []string) []rota {
+func RetornaRotasComandos(comandos []string) []rota {
 	rotasComandosEParametros := helper.SeparaRotasComandosEParametros(comandos)
 
-	var rotas = []rota{}
+	var rotas []rota
 	for k, v := range rotasComandosEParametros {
 		rotas = append(rotas, rota{k, v, helper.Executa})
 	}
