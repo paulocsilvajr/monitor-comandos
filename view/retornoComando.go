@@ -1,13 +1,14 @@
 package view
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/paulocsilvajr/monitor-comandos/model"
+)
 
-func RetornaSaidaComandoJSON(rota, stdout, err string, exitCode int) gin.H {
+func GetSaidaComandoJSON(comando, stdout, err string, exitCode int) gin.H {
+	saidaComando := model.NewSaidaComando(comando, stdout, err, exitCode)
+
 	return gin.H{
-		rota: map[string]any{
-			"stdout":    stdout,
-			"err":       err,
-			"exit-code": exitCode,
-		},
+		comando: saidaComando.JSON(),
 	}
 }
