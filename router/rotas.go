@@ -8,7 +8,7 @@ type rota struct {
 	Funcao  func(string, ...string) (string, string, int)
 }
 
-func RetornaRotasComandos(comandos []string) []rota {
+func GetRotasComandos(comandos []string) []rota {
 	rotasComandosEParametros := helper.SeparaRotasComandosEParametros(comandos)
 
 	var rotas []rota

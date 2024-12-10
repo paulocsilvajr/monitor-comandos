@@ -23,9 +23,9 @@ func main() {
 		log.Fatalf("Arquivo '%s' vazio. \nAdicione comandos no arquivo citado, separados por linha, na sintaxe:\nrota comando parâmetro \"parâmetro com espaco\"\ne reexecute a API.\n", helper.ARQUIVO)
 	}
 
-	rotasComandos := router.RetornaRotasComandos(comandos)
+	rotasComandos := router.GetRotasComandos(comandos)
 
-	r := router.RetornaRouter(rotasComandos)
+	r := router.GetRouter(rotasComandos)
 
 	r.Run() // 8080
 }

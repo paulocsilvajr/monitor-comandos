@@ -5,10 +5,14 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/paulocsilvajr/monitor-comandos/controller"
+	"github.com/paulocsilvajr/monitor-comandos/model"
 	"github.com/paulocsilvajr/monitor-comandos/view"
 )
 
-func RetornaRouter(rotas []rota) *gin.Engine {
+var resultados = model.NewResultado()
+
+func GetRouter(rotas []rota) *gin.Engine {
 	r := gin.Default()
 
 	for _, rota := range rotas {
@@ -24,7 +28,7 @@ func RetornaRouter(rotas []rota) *gin.Engine {
 			}
 
 			c.JSON(status,
-				view.RetornaSaidaComandoJSON(
+				view.GetSaidaComandoJSON(
 					rotaLocal.Nome,
 					stdout,
 					err,
@@ -33,6 +37,8 @@ func RetornaRouter(rotas []rota) *gin.Engine {
 			)
 		})
 	}
+
+	r.GET("/resultados/:id", controller.Resultados)
 
 	return r
 }
