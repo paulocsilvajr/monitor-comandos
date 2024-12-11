@@ -15,23 +15,26 @@ func GetResultados(c *gin.Context) {
 
 	saidaComando, ok := Resultados.Get(id)
 
+	statusCode := http.StatusOK
 	if ok {
-		status := http.StatusOK
 		if saidaComando.ExitCode != 0 {
-			status = http.StatusInternalServerError
+			statusCode = http.StatusInternalServerError
 		}
 
-		c.JSON(status,
-			view.GetSaidaComandoJSON(
+		c.JSON(statusCode, gin.H{
+			saidaComando.Comando: view.GetSaidaComandoJSON(
 				saidaComando.Comando,
 				saidaComando.Stdout,
 				saidaComando.Err,
 				saidaComando.ExitCode,
 			),
-		)
+			"status-code": statusCode,
+		})
 	} else {
-		c.JSON(http.StatusNotFound, gin.H{
-			"message": "não existe resultado associado a id informada",
+		statusCode = http.StatusNotFound
+		c.JSON(statusCode, gin.H{
+			"message":     "não existe resultado associado a id informada",
+			"status-code": statusCode,
 		})
 	}
 
