@@ -6,9 +6,9 @@ Este repositório contém um API desenvolvida em Golang para executar comandos p
 ### Pré-requisitos
 Para compilar o projeto, deve-se instalar a linguagem de programação Go(golang) na versão 1.21.9 ou superior. No Ubuntu 24.04, execute:
 ```
-sudo apt install golang-1.21 golang-1.21-go golang-1.21-doc
+sudo apt install golang-go
 ```
-Adicione ao PATH o local do executável do go, como no exemplo abaixo do arquivo .zshrc e reinicie a sessão:
+Se necessário, adicione ao PATH o local do executável do go, como no exemplo abaixo do arquivo .zshrc e reinicie a sessão:
 ```
 export PATH=/usr/lib/go-1.21/bin/:$PATH
 ```
