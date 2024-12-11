@@ -64,7 +64,7 @@ README.md: Este arquivo de ajuda.
 
 ### Licença
 
-[Licença MIT](link da licença), arquivo em anexo no repositório.
+[Licença MIT](https://github.com/paulocsilvajr/monitor-comandos/blob/master/license_mit.txt), arquivo em anexo no repositório.
 
 ### Contato
 
