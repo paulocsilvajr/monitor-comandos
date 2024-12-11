@@ -25,16 +25,20 @@ func GetRouter(rotas []rota) *gin.Engine {
 				panic(err)
 			}
 
-			stdout, er, exitCode := rotaLocal.Funcao(rotaLocal.Comando[0], rotaLocal.Comando[1:]...)
-			comando := strings.Join(rotaLocal.Comando, " ")
+			go func() {
+				stdout, er, exitCode := rotaLocal.Funcao(rotaLocal.Comando[0], rotaLocal.Comando[1:]...)
+				comando := strings.Join(rotaLocal.Comando, " ")
 
-			controller.Resultados.Adiciona(
-				id,
-				model.NewSaidaComando(comando, stdout, er, exitCode),
-			)
+				controller.Resultados.Adiciona(
+					id,
+					model.NewSaidaComando(comando, stdout, er, exitCode),
+				)
+			}()
 
-			c.JSON(http.StatusOK, gin.H{
-				"route": fmt.Sprintf("/resultados/%s", id),
+			statusCode := http.StatusOK
+			c.JSON(statusCode, gin.H{
+				"route":       fmt.Sprintf("/resultados/%s", id),
+				"status-code": statusCode,
 			})
 		})
 	}

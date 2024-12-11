@@ -1,8 +1,12 @@
 package model
 
 import (
+	"sync"
+
 	"github.com/google/uuid"
 )
+
+var mutex sync.Mutex
 
 func GetChave() (string, error) {
 	chave, err := uuid.NewRandom()
@@ -21,7 +25,9 @@ func NewResultado() *Resultado {
 }
 
 func (r *Resultado) Adiciona(chave string, s SaidaComando) {
+	mutex.Lock()
 	r.registros[chave] = s
+	mutex.Unlock()
 }
 
 func (r *Resultado) Get(chave string) (SaidaComando, bool) {
