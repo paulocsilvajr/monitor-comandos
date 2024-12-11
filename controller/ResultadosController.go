@@ -14,7 +14,6 @@ func GetResultados(c *gin.Context) {
 	id := c.Param("id")
 
 	saidaComando, ok := Resultados.Get(id)
-
 	statusCode := http.StatusOK
 	if ok {
 		if saidaComando.ExitCode != 0 {
@@ -30,6 +29,8 @@ func GetResultados(c *gin.Context) {
 			),
 			"status-code": statusCode,
 		})
+
+		Resultados.Remove(id)
 	} else {
 		statusCode = http.StatusNotFound
 		c.JSON(statusCode, gin.H{
