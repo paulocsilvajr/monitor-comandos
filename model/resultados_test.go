@@ -14,7 +14,8 @@ func TestAdiciona(t *testing.T) {
 	exitCode := 0
 	saidaComando := NewSaidaComando(comando, stdout, err, exitCode)
 
-	chave := resultado.Adiciona(saidaComando)
+	chave, _ := GetChave()
+	resultado.Adiciona(chave, saidaComando)
 
 	if _, ok := resultado.registros[chave]; !ok {
 		t.Error(helper.MsgErroTeste("chave não existe", chave, ""))
@@ -40,19 +41,22 @@ func TestAdicionaVariosRegistros(t *testing.T) {
 	comando01 := "ls"
 	err01 := ""
 	exitCode01 := 0
-	chave01 := resultado.Adiciona(NewSaidaComando(comando01, stdout01, err01, exitCode01))
+	chave01, _ := GetChave()
+	resultado.Adiciona(chave01, NewSaidaComando(comando01, stdout01, err01, exitCode01))
 
 	stdout02 := ""
 	comando02 := "ls"
 	err02 := "erro comando 02"
 	exitCode02 := 2
-	chave02 := resultado.Adiciona(NewSaidaComando(comando02, stdout02, err02, exitCode02))
+	chave02, _ := GetChave()
+	resultado.Adiciona(chave02, NewSaidaComando(comando02, stdout02, err02, exitCode02))
 
 	stdout03 := "saída comando 03"
 	comando03 := "ls"
 	err03 := ""
 	exitCode03 := 0
-	chave03 := resultado.Adiciona(NewSaidaComando(comando03, stdout03, err03, exitCode03))
+	chave03, _ := GetChave()
+	resultado.Adiciona(chave03, NewSaidaComando(comando03, stdout03, err03, exitCode03))
 
 	if valor, ok := resultado.Get(chave01); ok {
 		if valor.Stdout != stdout01 {
@@ -98,7 +102,8 @@ func TestGetChaveValida(t *testing.T) {
 	err := "teste erro"
 	exitCode := 42
 
-	chave := resultado.Adiciona(NewSaidaComando(comando, stdout, err, exitCode))
+	chave, _ := GetChave()
+	resultado.Adiciona(chave, NewSaidaComando(comando, stdout, err, exitCode))
 
 	valor, ok := resultado.Get(chave)
 	if !ok {
@@ -122,7 +127,8 @@ func TestGetChaveInvalida(t *testing.T) {
 	err := "teste erro"
 	exitCode := 42
 
-	resultado.Adiciona(NewSaidaComando(comando, stdout, err, exitCode))
+	chave, _ := GetChave()
+	resultado.Adiciona(chave, NewSaidaComando(comando, stdout, err, exitCode))
 
 	chaveInvalida := "ch4v3Qu3N403x15t3"
 	valor, ok := resultado.Get(chaveInvalida)
@@ -147,7 +153,8 @@ func TestRemove(t *testing.T) {
 	err := ""
 	exitCode := 0
 
-	chave := resultado.Adiciona(NewSaidaComando(comando, stdout, err, exitCode))
+	chave, _ := GetChave()
+	resultado.Adiciona(chave, NewSaidaComando(comando, stdout, err, exitCode))
 
 	resultado.Remove(chave)
 
@@ -162,19 +169,22 @@ func TestRemoveVariosRegistros(t *testing.T) {
 	stdout01 := "saida comando com sucesso"
 	err01 := ""
 	exitCode01 := 0
-	chave01 := resultado.Adiciona(NewSaidaComando(comando01, stdout01, err01, exitCode01))
+	chave01, _ := GetChave()
+	resultado.Adiciona(chave01, NewSaidaComando(comando01, stdout01, err01, exitCode01))
 
 	comando02 := "rs"
 	stdout02 := ""
 	err02 := "erro comando"
 	exitCode02 := -1
-	chave02 := resultado.Adiciona(NewSaidaComando(comando02, stdout02, err02, exitCode02))
+	chave02, _ := GetChave()
+	resultado.Adiciona(chave02, NewSaidaComando(comando02, stdout02, err02, exitCode02))
 
 	comando03 := "ts"
 	stdout03 := "saida comando 03"
 	err03 := "erro comando 03"
 	exitCode03 := 2
-	chave03 := resultado.Adiciona(NewSaidaComando(comando03, stdout03, err03, exitCode03))
+	chave03, _ := GetChave()
+	resultado.Adiciona(chave03, NewSaidaComando(comando03, stdout03, err03, exitCode03))
 
 	resultado.Remove(chave01)
 	if valor, ok := resultado.Get(chave01); ok {
