@@ -20,23 +20,23 @@ func GetResultados(c *gin.Context) {
 			statusCode = http.StatusInternalServerError
 		}
 
-		c.JSON(statusCode, gin.H{
-			saidaComando.Comando: view.GetSaidaComandoJSON(
+		view.RespostaJSON(c,
+			statusCode,
+			view.GetSaidaComandoJSON(
 				saidaComando.Comando,
 				saidaComando.Stdout,
 				saidaComando.Err,
 				saidaComando.ExitCode,
 			),
-			"status-code": statusCode,
-		})
+		)
 
 		Resultados.Remove(id)
 	} else {
 		statusCode = http.StatusNotFound
-		c.JSON(statusCode, gin.H{
-			"message":     "não existe resultado associado a id informada",
-			"status-code": statusCode,
-		})
+		view.RespostaJSON(c,
+			statusCode,
+			map[string]any{"message": "não existe resultado associado a id informada"},
+		)
 	}
 
 }

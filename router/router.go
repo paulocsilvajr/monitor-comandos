@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/paulocsilvajr/monitor-comandos/controller"
 	"github.com/paulocsilvajr/monitor-comandos/model"
+	"github.com/paulocsilvajr/monitor-comandos/view"
 )
 
 func GetRouter(rotas []rota) *gin.Engine {
@@ -36,10 +37,10 @@ func GetRouter(rotas []rota) *gin.Engine {
 			}()
 
 			statusCode := http.StatusOK
-			c.JSON(statusCode, gin.H{
-				"route":       fmt.Sprintf("/resultados/%s", id),
-				"status-code": statusCode,
-			})
+			view.RespostaJSON(c,
+				statusCode,
+				map[string]any{"route": fmt.Sprintf("/resultados/%s", id)},
+			)
 		})
 	}
 
