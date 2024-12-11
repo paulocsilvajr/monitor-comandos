@@ -4,6 +4,14 @@ import (
 	"github.com/google/uuid"
 )
 
+func GetChave() (string, error) {
+	chave, err := uuid.NewRandom()
+	if err != nil {
+		return "", err
+	}
+	return chave.String(), nil
+}
+
 type Resultado struct {
 	registros map[string]SaidaComando
 }
@@ -12,14 +20,8 @@ func NewResultado() *Resultado {
 	return &Resultado{make(map[string]SaidaComando)}
 }
 
-func (r *Resultado) Adiciona(s SaidaComando) string {
-	chave, err := uuid.NewRandom()
-	if err != nil {
-		return ""
-	}
-
-	r.registros[chave.String()] = s
-	return chave.String()
+func (r *Resultado) Adiciona(chave string, s SaidaComando) {
+	r.registros[chave] = s
 }
 
 func (r *Resultado) Get(chave string) (SaidaComando, bool) {

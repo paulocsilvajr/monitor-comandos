@@ -18,13 +18,19 @@ func GetRouter(rotas []rota) *gin.Engine {
 		// necessário declarar variável local de rota para pegar a instancia correta no loop em função anonima de r.GET
 		rotaLocal := rota
 		r.GET(rotaLocal.Nome, func(c *gin.Context) {
-			log.Println("Executado:", rotaLocal.Nome)
+			log.Printf("Executando rota: %s comando: [%q]\n", rotaLocal.Nome, rotaLocal.Comando)
 
-			stdout, err, exitCode := rotaLocal.Funcao(rotaLocal.Comando[0], rotaLocal.Comando[1:]...)
+			id, err := model.GetChave()
+			if err != nil {
+				panic(err)
+			}
+
+			stdout, er, exitCode := rotaLocal.Funcao(rotaLocal.Comando[0], rotaLocal.Comando[1:]...)
 			comando := strings.Join(rotaLocal.Comando, " ")
 
-			id := controller.Resultados.Adiciona(
-				model.NewSaidaComando(comando, stdout, err, exitCode),
+			controller.Resultados.Adiciona(
+				id,
+				model.NewSaidaComando(comando, stdout, er, exitCode),
 			)
 
 			c.JSON(http.StatusOK, gin.H{
