@@ -16,7 +16,7 @@ func main() {
 	if len(comandos) > 0 {
 		log.Printf("Comandos registrados em arquivo '%s':\n", helper.ARQUIVO)
 		for i, comando := range comandos {
-			log.Printf("%d - [%s]\n", i, comando)
+			log.Printf("%d - [%s]\n", i+1, comando)
 		}
 		log.Println()
 	} else {

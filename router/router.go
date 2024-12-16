@@ -13,6 +13,8 @@ import (
 )
 
 func GetRouter(rotas []rota) *gin.Engine {
+	gin.SetMode(gin.ReleaseMode) // ativa modo Release. Para debug comentar essa linha
+
 	r := gin.Default()
 
 	for _, rota := range rotas {
@@ -42,7 +44,9 @@ func GetRouter(rotas []rota) *gin.Engine {
 				map[string]any{"route": fmt.Sprintf("/resultados/%s", id)},
 			)
 		})
+		log.Printf("Registrado rota: %s\n", rotaLocal.Nome)
 	}
+	log.Println()
 
 	r.GET("/resultados/:id", controller.GetResultados)
 
