@@ -21,10 +21,13 @@ go run main.go
 
 Na primeira execução do programa é criado o arquivo *comandos*. Deve-se adicionar nesse arquivo os comandos que se deseja executar no servidor remoto. A convenção para esse arquivo deve ser a seguinte:
 ```
-nomeRotaSemEspacos comando2 -p1 --parametro2 "parametro em string"
+nomeRotaSemEspacos comando1 -p1 --parametro2 "parametro em string"
 outraRota comando2 -p1
 ```
-A rota informada como primeiro campo de cada linha do arquivo deve ser concisa e sem espaços. Ela será usada na rota para invocar o comando associado.
+A rota informada como primeiro campo de cada linha do arquivo deve ser concisa e sem espaços. Ela será usada na rota para invocar o comando associado. Abaixo exemplo de listagem de palavras de dicionário em inglês presente no sistema, respondendo a rota lsdict:
+```
+lsdict cat /usr/share/dict/american-english
+```
 O comando pode conter quantos parâmetros forem necessários, mas se um deles precisar ser um texto com espaços, obrigatóriamente deve-se informar esse parâmetro entre aspas(").
 Cada linha do arquivo deve conter somente um comando. Para comandos mais complexos, crie um script.sh com a lógica necessária e informe esse script no arquivo, de preferência com o diretório absoluto do script, caso contrário, ele deve estar na pasta do executável desta API. Lembre-se da permissão de eXecução do script.
 
@@ -41,6 +44,8 @@ PORT=9000 go run main.go
 Após obter o resultado via consulta na rota associada, ele é removido e não pode ser mais obtido. Deve-se reexecutar o comando na rota associada para obter novamente a resposta.
 
 Se a API for finalizada, resultados que não foram solicitados via rota associada serão perdidos, pois são armazenados em memória.
+
+Para execução de comandos como administrador(root), execute a API como administrador.
 
 ### Arquivos
 
