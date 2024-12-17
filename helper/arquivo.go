@@ -3,18 +3,26 @@ package helper
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
+	"path"
+	"path/filepath"
 	"strings"
 )
 
 const ARQUIVO = "comandos"
 
 func AbreArquivoComandos() ([]string, error) {
-	arquivo, err := os.OpenFile(ARQUIVO, os.O_RDONLY|os.O_CREATE, 0666)
+	caminhoArquivo, err := getCaminhoArquivoComandos()
+	if err != nil {
+		return nil, err
+	}
+	arquivo, err := os.OpenFile(caminhoArquivo, os.O_RDONLY|os.O_CREATE, 0666)
 	if err != nil {
 		return nil, err
 	}
 	defer arquivo.Close()
+	log.Printf("Arquivo de comandos em %q", caminhoArquivo)
 
 	scanner := bufio.NewScanner(arquivo)
 	var comandos []string
@@ -35,6 +43,20 @@ func SeparaRotasComandosEParametros(comandosEmArquivo []string) map[string][]str
 	}
 
 	return rotasComandosEParametros
+}
+
+func getCaminhoArquivoComandos() (string, error) {
+	diretorioExecutavel, err := getDiretorioAbs()
+	if err != nil {
+		return "", err
+	}
+
+	caminhoArquivo := path.Join(diretorioExecutavel, ARQUIVO)
+	return caminhoArquivo, nil
+}
+
+func getDiretorioAbs() (string, error) {
+	return filepath.Abs(filepath.Dir(os.Args[0]))
 }
 
 func converteTokensEmMapRotas(tokens []string, rotasComandosEParametros map[string][]string) {
