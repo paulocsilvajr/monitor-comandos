@@ -8,6 +8,8 @@ import (
 
 var mutex sync.Mutex
 
+type registro map[string]SaidaComando
+
 func GetChave() (string, error) {
 	chave, err := uuid.NewRandom()
 	if err != nil {
@@ -17,11 +19,11 @@ func GetChave() (string, error) {
 }
 
 type Resultado struct {
-	registros map[string]SaidaComando
+	registros registro
 }
 
 func NewResultado() *Resultado {
-	return &Resultado{make(map[string]SaidaComando)}
+	return &Resultado{make(registro)}
 }
 
 func (r *Resultado) Adiciona(chave string, s SaidaComando) {
@@ -40,4 +42,8 @@ func (r *Resultado) Get(chave string) (SaidaComando, bool) {
 
 func (r *Resultado) Remove(id string) {
 	delete(r.registros, id)
+}
+
+func (r *Resultado) Len() int {
+	return len(r.registros)
 }
