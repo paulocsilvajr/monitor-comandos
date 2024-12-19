@@ -31,6 +31,9 @@ func TestAdiciona(t *testing.T) {
 		if valor.ExitCode != exitCode {
 			t.Error(helper.MsgErroTeste("valor exit-code errado", exitCode, valor.ExitCode))
 		}
+		if valor.Comando != comando {
+			t.Error(helper.MsgErroTeste("valor comando errado", comando, valor.Comando))
+		}
 	}
 }
 
@@ -68,6 +71,9 @@ func TestAdicionaVariosRegistros(t *testing.T) {
 		if valor.ExitCode != exitCode01 {
 			t.Error(helper.MsgErroTeste("valor exit-code01 errado", exitCode01, valor.ExitCode))
 		}
+		if valor.Comando != comando01 {
+			t.Error(helper.MsgErroTeste("valor comando01 errado", comando01, valor.Comando))
+		}
 	}
 
 	if valor, ok := resultado.Get(chave02); ok {
@@ -80,6 +86,9 @@ func TestAdicionaVariosRegistros(t *testing.T) {
 		if valor.ExitCode != exitCode02 {
 			t.Error(helper.MsgErroTeste("valor exit-code02 errado", exitCode02, valor.ExitCode))
 		}
+		if valor.Comando != comando02 {
+			t.Error(helper.MsgErroTeste("valor comando02 errado", comando02, valor.Comando))
+		}
 	}
 
 	if valor, ok := resultado.Get(chave03); ok {
@@ -91,6 +100,9 @@ func TestAdicionaVariosRegistros(t *testing.T) {
 		}
 		if valor.ExitCode != exitCode03 {
 			t.Error(helper.MsgErroTeste("valor exit-code03 errado", exitCode03, valor.ExitCode))
+		}
+		if valor.Comando != comando03 {
+			t.Error(helper.MsgErroTeste("valor comando03 errado", comando03, valor.Comando))
 		}
 	}
 }
@@ -118,6 +130,9 @@ func TestGetChaveValida(t *testing.T) {
 	if valor.ExitCode != exitCode {
 		t.Error(helper.MsgErroTeste("valor exit-code errado", exitCode, valor.ExitCode))
 	}
+	if valor.Comando != comando {
+		t.Error(helper.MsgErroTeste("valor comando errado", comando, valor.Comando))
+	}
 }
 
 func TestGetChaveInvalida(t *testing.T) {
@@ -143,6 +158,9 @@ func TestGetChaveInvalida(t *testing.T) {
 	}
 	if valor.ExitCode == exitCode {
 		t.Error(helper.MsgErroTeste("valor exit-code errado", exitCode, valor.ExitCode))
+	}
+	if valor.Comando == comando {
+		t.Error(helper.MsgErroTeste("valor comando errado", comando, valor.Comando))
 	}
 }
 
@@ -204,5 +222,44 @@ func TestRemoveVariosRegistros(t *testing.T) {
 	if valor, ok := resultado.Get(chave03); ok {
 		t.Error(helper.MsgErroTeste("retornou valor para chave03 removida", nil, valor))
 	}
+}
 
+func TestNewResultado(t *testing.T) {
+	resultado := NewResultado()
+
+	if len(resultado.registros) != 0 {
+		t.Error(helper.MsgErroTeste("resultado vazio com elementos", 0, len(resultado.registros)))
+	}
+
+	chave, _ := GetChave()
+	resultado.Adiciona(chave, NewSaidaComando("ls", "arquivo", "", 0))
+
+	if len(resultado.registros) != 1 {
+		t.Error(helper.MsgErroTeste("quantidade de registros errada", 1, len(resultado.registros)))
+	}
+
+	if resultado.Len() != 1 {
+		t.Error(helper.MsgErroTeste("quantidade de registros errada", 1, resultado.Len()))
+	}
+}
+
+func TestGetChave(t *testing.T) {
+	chave, err := GetChave()
+	if err != nil {
+		t.Error(helper.MsgErroTeste("erro inesperado ao criar chave", nil, err))
+	}
+
+	if len(chave) == 0 {
+		t.Error(helper.MsgErroTeste("não retornou chave", "CH4V3AleatoriaLonga", chave))
+	}
+
+	chaveTeste := "m1nh4Ch4v3Aleator1aM4nu4l"
+	if chave == chaveTeste {
+		t.Error(helper.MsgErroTeste("chave gerada não aleatória", "CH4V3AleatoriaLonga", chaveTeste))
+	}
+
+	tamanhoChaveEsperado := 36
+	if len(chave) != tamanhoChaveEsperado {
+		t.Error(helper.MsgErroTeste("tamanho de chave errado", tamanhoChaveEsperado, len(chave)))
+	}
 }
