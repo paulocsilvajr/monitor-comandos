@@ -12,14 +12,16 @@ Se necessário, adicione ao PATH o local do executável do go, como no exemplo a
 ```
 export PATH=/usr/lib/go-1.21/bin/:$PATH
 ```
-Instale as dependências via `go get` na pasta do projeto.
+Instale as dependências via `go get` na pasta do projeto. Somente será possível instalar dependências e compilar se a versão do Go instalada seja igual ou superior a informada no arquivo 'go.mod'
 
 O script *build.sh* compila o código na pasta bin, arquivo *monitor-comandos*. Pode-se executar também o projeto via comando:
 ```
 go run main.go
 ```
 
-Na primeira execução do programa é criado o arquivo *comandos*. Deve-se adicionar nesse arquivo os comandos que se deseja executar no servidor remoto. A convenção para esse arquivo deve ser a seguinte:
+Na primeira execução do programa é criado o arquivo *comandos* no mesmo diretório do executável da API. Se executado a API via 'go run', o arquivo 'comandos' vai ficar na pasta temporária do SO, portanto para facilitar testes, compile via 'build.sh'. 
+
+Deve-se adicionar no arquivo 'comandos' os comandos que se deseja executar no servidor remoto. A convenção para esse arquivo deve ser a seguinte:
 ```
 nomeRotaSemEspacos comando1 -p1 --parametro2 "parametro em string"
 outraRota comando2 -p1
@@ -36,6 +38,8 @@ Por padrão, a API executa na porta 8080, padrão do [Gin Framework](https://gin
 PORT=9000 ./monitor-comandos  // ou
 PORT=9000 go run main.go
 ```
+
+O script *install_service.sh* adiciona a API da pasta 'bin' como um serviço do Systemd. O serviço que será adicionado terá a permissão do usuário que executar o script citado, portanto, se for necessário executar comandos como root, execute o script 'install_service.sh' como root. Para detalhes de uso consulte a ajuda do script com os parametros -h ou --help.
 
 ### Rotas:
 - **[GET]/rota-comando-cadastrado-em-arquivo**: Retorna o *status-code* e a rota para consultar o resultado do comando no formato da rota abaixo
@@ -62,8 +66,10 @@ comandos: Arquivo com a listagem de rotas e comandos associados usados pela API 
 executa_remoto.sh: Script para testes local de API - consulta a API no endereço "localhost:8080" e formata a resposta JSON via jq.
 go_teste_all.sh: Script para executar os testes unitários que foram implementados. Testes em construção constante.
 go.mod e go.sum: Arquivos do golang que definem os pacotes usados nesse projeto go. "go get" consulta esse arquivo para instalar as dependências.
+install_service.sh: Script para criar e registrar a API como um serviço do systemd. Execute com a opção -h ou --help para ajuda.
 license_mit.txt: Licença MIT associada ao projeto.
 main.go: Arquivo principal do projeto go.
+monitorar_requisicoes.sh: Script para monitorar a API executada como um serviço via journalctl.
 README.md: Este arquivo de ajuda.
 ```
 
