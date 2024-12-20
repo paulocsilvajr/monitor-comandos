@@ -1,4 +1,6 @@
 #!/bin/bash
 
+source vars.sh
+
 mkdir -v bin
-go build -v -o bin/monitor-comandos
+go build -v -o $DIRETORIOBIN/$PROGRAMA
